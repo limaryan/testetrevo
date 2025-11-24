@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>Gerador de Bilhetes - Trevo</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        background: #f0f8f0;
+        padding: 40px;
+    }
+
+    .trevo {
+        position: relative;
+        width: 300px;
+        height: 300px;
+        margin: auto;
+    }
+
+    .folha {
+        width: 120px;
+        height: 120px;
+        background: #3cb371;
+        border-radius: 50% 50% 0 50%;
+        position: absolute;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        font-weight: bold;
+        color: white;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+
+    #f1 { top: 0; left: 90px; transform: rotate(45deg); }
+    #f2 { top: 90px; left: 0; transform: rotate(135deg); }
+    #f3 { top: 90px; left: 180px; transform: rotate(-45deg); }
+    #f4 { top: 180px; left: 90px; transform: rotate(-135deg); }
+
+    .form {
+        margin-bottom: 25px;
+    }
+
+    input {
+        padding: 8px;
+        font-size: 16px;
+        margin: 5px;
+        width: 200px;
+    }
+
+    button {
+        padding: 10px 20px;
+        font-size: 18px;
+        background: #3cb371;
+        color: white;
+        border: none;
+        cursor: pointer;
+        border-radius: 5px;
+    }
+
+    button:hover {
+        background: #2e8b57;
+    }
+
+</style>
+</head>
+<body>
+
+<h1>Gerador de Bilhete com Trevo</h1>
+
+<div class="form">
+    <input id="nome" placeholder="Nome"><br>
+    <input id="sobrenome" placeholder="Sobrenome"><br>
+    <button onclick="gerar()">Gerar Bilhete</button>
+</div>
+
+<div class="trevo">
+    <div class="folha" id="f1">----</div>
+    <div class="folha" id="f2">----</div>
+    <div class="folha" id="f3">----</div>
+    <div class="folha" id="f4">----</div>
+</div>
+
+<p id="mensagem"></p>
+
+<script>
+const URL = "URL_DO_APPS_SCRIPT_AQUI"; // Substitua pela URL do Apps Script
+
+function gerarNumero() {
+    return Math.floor(Math.random() * 9000) + 1000;
+}
+
+async function gerar() {
+    const nome = document.getElementById("nome").value;
+    const sobrenome = document.getElementById("sobrenome").value;
+
+    const bilhete = {
+        nome,
+        sobrenome,
+        f1: gerarNumero(),
+        f2: gerarNumero(),
+        f3: gerarNumero(),
+        f4: gerarNumero()
+    };
+
+    // Atualiza o trevo na tela
+    document.getElementById("f1").innerText = bilhete.f1;
+    document.getElementById("f2").innerText = bilhete.f2;
+    document.getElementById("f3").innerText = bilhete.f3;
+    document.getElementById("f4").innerText = bilhete.f4;
+
+    // Envia para o Apps Script
+    fetch(URL, {
+        method: "POST",
+        body: JSON.stringify(bilhete)
+    });
+
+    document.getElementById("mensagem").innerText = "Bilhete gerado e enviado para a planilha!";
+}
+</script>
+
+</body>
+</html>
